@@ -12,13 +12,13 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_props_to_html_one(self):
         node = HTMLNode(props={"style": "color: red;"})
-        result = 'style="color: red;"'
+        result = ' style="color: red;"'
 
         self.assertEqual(node.props_to_html(), result)
 
     def test_props_to_html_two(self):
         node = HTMLNode(props={"style": "color: red;", "href": "youtube.com"})
-        result = 'style="color: red;" href="youtube.com"'
+        result = ' style="color: red;" href="youtube.com"'
 
         self.assertEqual(node.props_to_html(), result)
 
