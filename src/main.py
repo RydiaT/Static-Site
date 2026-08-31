@@ -72,11 +72,15 @@ def generate_page(from_path, template_path, dest_path, basepath):
     with open(template_path, "r") as file:
         template = file.read()
 
-    md_html = markdown_to_html_node(markdown)
-    md_html = md_html.to_html()
-    title = extract_title(markdown)
+    if from_path[-4:] != ".css":
+        md_html = markdown_to_html_node(markdown)
+        md_html = md_html.to_html()
+        title = extract_title(markdown)
 
-    page = template.replace("{{ Title }}", title).replace("{{ Content }}", md_html).replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
+        page = template.replace("{{ Title }}", title).replace("{{ Content }}", md_html).replace('href="/', f'href="{basepath}/').replace('src="/', f'src="{basepath}/')
+    else:
+        page = markdown
+        dest_path = dest_path.split(".")[0] + ".css"
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, "w") as f:
