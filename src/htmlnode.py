@@ -30,6 +30,7 @@ class LeafNode(HTMLNode):
 
     def to_html(self) -> str:
         if not self.value:
+            print(self)
             raise ValueError("Value is blank. Leaf Nodes MUST have a value.")
 
         if not self.tag:

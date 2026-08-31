@@ -97,13 +97,14 @@ def parse_code(block):
     return ParentNode("pre", [node])
 
 def parse_quote(block):
+    block = block.strip("\n")
     lines = block.split("> ")
 
     children = []
 
     for line in lines:
         if line.split():
-            nodes = text_to_textnodes(line)
+            nodes = text_to_textnodes(line.strip("\n"))
 
             for node in nodes:
                 children.append(text_node_to_html_node(node))
@@ -111,13 +112,14 @@ def parse_quote(block):
     return ParentNode("blockquote", children)
 
 def parse_ulist(block):
+    block = block.strip("\n")
     lines = block.split("- ")
 
     children = []
 
     for line in lines:
         if line.split():
-            text_nodes = text_to_textnodes(line)
+            text_nodes = text_to_textnodes(line.strip("\n"))
             nodes = []
 
             for node in text_nodes:
@@ -136,7 +138,7 @@ def parse_olist(block):
         if line.split():
             line = line[3:]
 
-            text_nodes = text_to_textnodes(line)
+            text_nodes = text_to_textnodes(line.strip("\n"))
             nodes = []
 
             for node in text_nodes:
