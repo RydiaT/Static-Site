@@ -81,17 +81,9 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     recursive_helper(dest_dir_path, template_path, dest_dir_path, dir_path_content, "", True)
 
 def recursive_helper(dest, template, content, dir, curr_path, is_root = False):
-    target = dest
-    root = content
-
     print(f"Dir: {dir}")
     print(f"Current Path: {curr_path}")
     print(f"Is Root: {is_root}")
-
-    # if is_root:
-    #     print("Clearing Public...")
-    #     shutil.rmtree(dest)
-    #     os.mkdir(dest)
 
     print()
 
@@ -102,15 +94,11 @@ def recursive_helper(dest, template, content, dir, curr_path, is_root = False):
     for file in files:
         print(f"{file} Is File: {os.path.isfile(dir + file)}")
         if os.path.isfile(dir + file):
-            print(f"Copying {file}...")
-            print(f"Destination Path: {target + curr_path}")
+            print(f"Generating {file} as html...")
+            print(f"Destination Path: {dest + curr_path}")
             print(f"Origin Path: {dir + file}")
-            # if not os.path.isdir(target + curr_path):
-            #     print("Creating Destination Path...")
-            #     os.mkdir(target + curr_path)
-            # shutil.copy(dir + file, target + curr_path)
-            generate_page(dir + file, template, target + curr_path + file.split(".")[0] + ".html")
-            print(f"{file} Copied Sucessfully!")
+            generate_page(dir + file, template, dest + curr_path + file.split(".")[0] + ".html")
+            print(f"{file} Generated Sucessfully!")
             print("---------------------------------------------------")
         else:
             file = file + "/"
