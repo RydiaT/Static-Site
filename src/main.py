@@ -1,17 +1,24 @@
+import sys
+
 from BlockNode import markdown_to_html_node
 import os
 import shutil
 
 def main():
-    root = "static/"
+    # root = "static/"
+    #
+    # copy_static_to_public(root, "",True)
+    #
+    # generate_pages_recursive("content/", "template.html", "public/")
+    basepath = sys.argv[0]
 
-    copy_static_to_public(root, "",True)
+    if basepath == "":
+        basepath = "content/"
 
-    generate_pages_recursive("content/", "template.html", "public/")
+    generate_pages_recursive("content/", "template.html", "docs/", basepath)
 
 def copy_static_to_public(dir, curr_path, is_root = False):
     target = "public/"
-    root = "static/"
 
     print(f"Dir: {dir}")
     print(f"Current Path: {curr_path}")
@@ -57,7 +64,7 @@ def extract_title(markdown):
 
     raise Exception("No Header Found")
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     with open(from_path, "r") as file:
@@ -69,7 +76,7 @@ def generate_page(from_path, template_path, dest_path):
     md_html = md_html.to_html()
     title = extract_title(markdown)
 
-    page = template.replace("{{ Title }}", title).replace("{{ Content }}", md_html)
+    page = template.replace("{{ Title }}", title).replace("{{ Content }}", md_html).replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
 
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, "w") as f:
@@ -77,10 +84,10 @@ def generate_page(from_path, template_path, dest_path):
 
     print(f"Page written sucessfully.")
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    recursive_helper(dest_dir_path, template_path, dest_dir_path, dir_path_content, "", True)
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
+    recursive_helper(basepath, dest_dir_path, template_path, dest_dir_path, dir_path_content, "", True)
 
-def recursive_helper(dest, template, content, dir, curr_path, is_root = False):
+def recursive_helper(basepath, dest, template, content, dir, curr_path, is_root = False):
     print(f"Dir: {dir}")
     print(f"Current Path: {curr_path}")
     print(f"Is Root: {is_root}")
@@ -97,7 +104,7 @@ def recursive_helper(dest, template, content, dir, curr_path, is_root = False):
             print(f"Generating {file} as html...")
             print(f"Destination Path: {dest + curr_path}")
             print(f"Origin Path: {dir + file}")
-            generate_page(dir + file, template, dest + curr_path + file.split(".")[0] + ".html")
+            generate_page(dir + file, template, dest + curr_path + file.split(".")[0] + ".html", basepath)
             print(f"{file} Generated Sucessfully!")
             print("---------------------------------------------------")
         else:
@@ -106,7 +113,7 @@ def recursive_helper(dest, template, content, dir, curr_path, is_root = False):
             print(f"New Directory: {dir + file}")
             print(f"New Path: {curr_path + file}")
             print("*---------------------------------------------------*")
-            recursive_helper(dest, template, content, dir + file, curr_path + file)
+            recursive_helper(basepath, dest, template, content, dir + file, curr_path + file)
 
 
 main()
