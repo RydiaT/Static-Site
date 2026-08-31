@@ -10,7 +10,7 @@ def main():
     # copy_static_to_public(root, "",True)
     #
     # generate_pages_recursive("content/", "template.html", "public/")
-    basepath = sys.argv[0]
+    basepath = sys.argv[1]
 
     if basepath == "":
         basepath = "content/"
